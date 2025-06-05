@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Category;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -45,6 +46,7 @@ class ProductResource extends Resource
                     ->label('Category')
                     ->relationship('category', 'name')
                     ->searchable()
+                    ->preload()
                     ->required(),
             ]);
     }
@@ -65,7 +67,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')->badge(),
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->sortable()

@@ -35,7 +35,7 @@ class ProductsRelationManager extends RelationManager
             Tables\Columns\TextColumn::make('name'),
             Tables\Columns\TextColumn::make('price'),
             Tables\Columns\TextColumn::make('stock'),
-            Tables\Columns\BadgeColumn::make('status'),
+            Tables\Columns\TextColumn::make('status')->badge(),
         ])
             ->filters([])
             ->headerActions([
