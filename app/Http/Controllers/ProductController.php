@@ -4,26 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
+    public function __construct(protected ProductService $productService)
+    {
+        //
+    }
+
     public function index(Request $request)
     {
-        $products = Product::with('category')
-        ->when($request->category, fn($q) => $q->whereHas('category', fn($q2) => $q2->where('slug', $request->category)))
-            ->when($request->sort === 'price_asc', fn($q) => $q->orderBy('price'))
-            ->when($request->sort === 'price_desc', fn($q) => $q->orderByDesc('price'))
-            ->orderByDesc('created_at')
-            ->cursorPaginate(15);
+        $products = $this->productService->getProducts($request);
+        $categories = $this->productService->getCachedCategories();
 
-        $categories = Category::select('id', 'name', 'slug')->get();
-
-        return view('products.index', [
-            'products' => $products,
-            'categories' => $categories,
-        ]);
+        return view('products.index', compact('products', 'categories'));
     }
 
     public function show($slug)
